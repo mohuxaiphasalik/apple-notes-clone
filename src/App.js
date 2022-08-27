@@ -54,20 +54,11 @@ export default function App() {
     [notes]
   );
 
-  function noteToDelete(noteId) {
-    let noteFound;
-    notes.forEach((note) => {
-      if (note.id === noteId) {
-        noteFound = note;
-      }
-    });
-    return noteFound;
-  }
   function deleteNote(event, noteId) {
     event.stopPropagation();
     let newNotes = [];
     notes.forEach((note) => {
-      if (note != noteToDelete(noteId)) {
+      if (note.id !== noteId) {
         newNotes.push(note);
       }
     });
