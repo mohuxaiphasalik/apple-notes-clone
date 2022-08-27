@@ -4,11 +4,11 @@ import Sidebar from "./components/Sidebar";
 import Split from "react-split";
 import { nanoid } from "nanoid";
 import "./styles/style.css";
-
 export default function App() {
   const [notes, setNotes] = React.useState(
     () => JSON.parse(localStorage.getItem("notes")) || []
   );
+
   const [currentNoteId, setCurrentNoteId] = React.useState(
     (notes[0] && notes[0].id) || ""
   );
@@ -24,19 +24,33 @@ export default function App() {
   }
 
   function updateNote(text) {
-    setNotes((oldNotes) =>
-      oldNotes.map((oldNote) => {
-        return oldNote.id === currentNoteId
-          ? { ...oldNote, body: text }
-          : oldNote;
-      })
-    );
+    setNotes((oldNotes) => {
+      const newArrangement = [];
+      oldNotes.forEach((note) => {
+        console.log(note);
+        if (note.id === currentNoteId) {
+          newArrangement.unshift({ ...note, body: text });
+        } else {
+          newArrangement.push(note);
+        }
+      });
+      return newArrangement;
+    });
   }
+
+  // working without making recent one at top
+
+  //  setNotes((oldNotes) =>
+  //    oldNotes.map((oldNote) => {
+  //      return oldNote.id === currentNoteId
+  //        ? { ...oldNote, body: text }
+  //        : oldNote;
+  //    })
+  //  );
+
   React.useEffect(
     function () {
-      localStorage.clear();
       window.localStorage.setItem("notes", JSON.stringify(notes));
-      console.log(localStorage);
     },
     [notes]
   );
