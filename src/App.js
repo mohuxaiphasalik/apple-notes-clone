@@ -27,7 +27,6 @@ export default function App() {
     setNotes((oldNotes) => {
       const newArrangement = [];
       oldNotes.forEach((note) => {
-        console.log(note);
         if (note.id === currentNoteId) {
           newArrangement.unshift({ ...note, body: text });
         } else {
@@ -55,6 +54,26 @@ export default function App() {
     [notes]
   );
 
+  function noteToDelete(noteId) {
+    let noteFound;
+    notes.forEach((note) => {
+      if (note.id === noteId) {
+        noteFound = note;
+      }
+    });
+    return noteFound;
+  }
+  function deleteNote(event, noteId) {
+    event.stopPropagation();
+    let newNotes = [];
+    notes.forEach((note) => {
+      if (note != noteToDelete(noteId)) {
+        newNotes.push(note);
+      }
+    });
+    setNotes(newNotes);
+  }
+
   function findCurrentNote() {
     return (
       notes.find((note) => {
@@ -72,6 +91,7 @@ export default function App() {
             currentNote={findCurrentNote()}
             setCurrentNoteId={setCurrentNoteId}
             newNote={createNewNote}
+            deleteClick={deleteNote}
           />
           {currentNoteId && notes.length > 0 && (
             <Editor currentNote={findCurrentNote()} updateNote={updateNote} />
